@@ -4,17 +4,15 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function RootLayout() {
     return (
-        // GestureHandlerRootView jest wymagany, aby działało wysuwanie palcem
         <GestureHandlerRootView style={{ flex: 1 }}>
             <Drawer
                 screenOptions={{
-                    headerShown: false, // Ukrywamy domyślne górne paski Expo (mamy własny Header!)
-                    drawerStyle: { backgroundColor: '#1e1e1e' }, // Ciemne tło samego menu
-                    drawerActiveTintColor: '#ffffff', // Biały tekst aktywnej zakładki
-                    drawerInactiveTintColor: '#888888', // Szary tekst nieaktywnych
+                    headerShown: false,
+                    drawerStyle: { backgroundColor: '#1e1e1e' },
+                    drawerActiveTintColor: '#ffffff',
+                    drawerInactiveTintColor: '#888888',
                 }}
             >
-                {/* --- EKRANY WIDOCZNE W MENU BOCZNYM --- */}
                 <Drawer.Screen name="settings" options={{ drawerLabel: 'Ustawienia' }} />
                 <Drawer.Screen name="history" options={{ drawerLabel: 'Historia Gier i Statystyki' }} />
                 <Drawer.Screen name="dashboard" options={{ drawerLabel: 'Tabela wyników' }} />
@@ -22,7 +20,6 @@ export default function RootLayout() {
                 <Drawer.Screen name="guide" options={{ drawerLabel: 'Poradnik o tysiącu' }} />
                 <Drawer.Screen name="index" options={{ drawerLabel: 'Ekran startowy' }} />
 
-                {/* --- EKRANY UKRYTE W MENU (ale aplikacja musi o nich wiedzieć) --- */}
                 <Drawer.Screen name="setup" options={{ drawerItemStyle: { display: 'none' } }} />
                 <Drawer.Screen name="login" options={{ drawerItemStyle: { display: 'none' } }} />
                 <Drawer.Screen name="register" options={{ drawerItemStyle: { display: 'none' } }} />

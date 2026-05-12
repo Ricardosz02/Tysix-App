@@ -8,14 +8,10 @@ export default function LoginScreen() {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        // Tutaj w przyszłości dodasz walidację i logikę autoryzacji
         console.log('Próba logowania:', email, password);
-        // Jeśli logowanie się powiedzie, przechodzimy np. do Dashboardu
-        // router.push('/dashboard'); 
     };
 
     const handleRegister = () => {
-        // ODKOMENTOWANE: Przejście do ekranu rejestracji!
         router.push('/register');
     };
 

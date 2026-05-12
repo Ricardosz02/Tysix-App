@@ -4,17 +4,14 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import Header from '../components/Header';
 
 export default function RegisterScreen() {
-    // Stany dla wszystkich pól z makiety
     const [nick, setNick] = useState('');
     const [login, setLogin] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleRegister = () => {
-        // W przyszłości wyślesz te dane do swojej bazy danych (np. backendu w Node.js)
         console.log('Nowy gracz:', { nick, login, email, password });
         alert('Konto utworzone! Możesz się zalogować.');
-        // Po udanej rejestracji cofamy użytkownika do ekranu logowania
         router.back();
     };
 
@@ -22,7 +19,6 @@ export default function RegisterScreen() {
         <View style={styles.container}>
             <Header />
 
-            {/* ScrollView zapobiega ucięciu ekranu, gdy wysunie się klawiatura */}
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.pageTitle}>REJESTRACJA</Text>
@@ -74,7 +70,6 @@ export default function RegisterScreen() {
                             <Text style={styles.buttonText}>ZAREJESTRUJ SIĘ</Text>
                         </Pressable>
 
-                        {/* Subtelny przycisk powrotu, jeśli ktoś wszedł tu przez pomyłkę */}
                         <Pressable onPress={() => router.back()} style={styles.backLink}>
                             <Text style={styles.backLinkText}>Masz już konto? Wróć do logowania</Text>
                         </Pressable>
@@ -88,7 +83,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1e1e1e', // Konsekwentny Dark Mode
+        backgroundColor: '#1e1e1e',
     },
     scrollContent: {
         alignItems: 'center',

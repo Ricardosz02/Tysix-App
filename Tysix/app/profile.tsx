@@ -7,11 +7,9 @@ export default function ProfileScreen() {
             <Header />
 
             <View style={styles.content}>
-                {/* Wewnętrzny ciemniejszy kontener na profil */}
                 <View style={styles.profileCard}>
 
                     <View style={styles.avatarLarge}>
-                        {/* Tutaj wstawimy w przyszłości ikonę użytkownika */}
                         <View style={styles.avatarHead} />
                         <View style={styles.avatarBody} />
                     </View>
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     profileCard: {
-        backgroundColor: '#151515', // Nieco ciemniejsze tło dla wyodrębnienia karty
+        backgroundColor: '#151515',
         width: '90%',
         height: '85%',
         alignItems: 'center',
@@ -61,7 +59,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         marginBottom: 30,
     },
-    // Prosta symulacja ludzika z makiety
     avatarHead: {
         width: 60,
         height: 60,

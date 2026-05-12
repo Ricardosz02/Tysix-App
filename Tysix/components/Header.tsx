@@ -3,13 +3,10 @@ import { router, useNavigation } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function Header() {
-    // Hook pozwalający na komunikację z menu bocznym
     const navigation = useNavigation();
-
     return (
         <View style={styles.headerContainer}>
 
-            {/* Przycisk Logo/Menu - Teraz OTWIERA MENU BOCZNE */}
             <Pressable
                 style={styles.menuButton}
                 onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
@@ -17,7 +14,6 @@ export default function Header() {
                 <Text style={styles.menuText}>LOGO/{"\n"}MENU</Text>
             </Pressable>
 
-            {/* Prawa strona: Nick i Awatar - Przenosi do Logowania */}
             <Pressable
                 style={styles.userSection}
                 onPress={() => router.push('/login')}
@@ -26,7 +22,6 @@ export default function Header() {
                     <Text style={styles.nickText}>NICK GRACZA</Text>
                 </View>
                 <View style={styles.avatar}>
-                    {/* Miejsce na ikonę */}
                 </View>
             </Pressable>
 
