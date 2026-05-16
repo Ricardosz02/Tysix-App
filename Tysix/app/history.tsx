@@ -1,25 +1,69 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Header from '../components/Header';
+import { supabase } from '../lib/supabase';
 
 export default function HistoryScreen() {
     const [history, setHistory] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadHistory = async () => {
-            try {
-                const data = await AsyncStorage.getItem('games_history');
-                if (data) {
-                    setHistory(JSON.parse(data));
-                }
-            } catch (e) {
-                console.error("Błąd wczytywania historii", e);
-            }
-        };
         loadHistory();
     }, []);
+
+    const loadHistory = async () => {
+        try {
+            setLoading(true);
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                const { data: cloudGames, error } = await supabase
+                    .from('games')
+                    .select(`
+                        id,
+                        created_at,
+                        game_scores (
+                            player_name,
+                            score,
+                            is_winner
+                        )
+                    `)
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (cloudGames && cloudGames.length > 0) {
+                    const formattedCloudHistory = cloudGames.map((game: any) => ({
+                        id: game.id,
+                        date: new Date(game.created_at).toLocaleDateString('pl-PL') + ' ' + new Date(game.created_at).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+                        players: game.game_scores.map((score: any) => ({
+                            name: score.player_name,
+                            score: score.score,
+                            isWinner: score.is_winner
+                        }))
+                    }));
+
+                    setHistory(formattedCloudHistory);
+                    setLoading(false);
+                    return;
+                }
+            }
+
+            const localData = await AsyncStorage.getItem('games_history');
+            if (localData) {
+                setHistory(JSON.parse(localData));
+            }
+
+        } catch (e) {
+            console.error("Błąd wczytywania historii z chmury lub telefonu:", e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const clearHistory = async () => {
         await AsyncStorage.removeItem('games_history');
@@ -32,10 +76,12 @@ export default function HistoryScreen() {
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.pageTitle}>HISTORIA GIER</Text>
+                    <Text style={styles.pageTitle}>HISTORIA ROZGRYWEK</Text>
                 </View>
 
-                {history.length === 0 ? (
+                {loading ? (
+                    <ActivityIndicator size="large" color="#c5a059" style={{ marginTop: 50 }} />
+                ) : history.length === 0 ? (
                     <Text style={styles.noHistory}>Brak zapisanych gier. Zagraj, aby zobaczyć tu wyniki!</Text>
                 ) : (
                     history.map((game) => (
@@ -47,8 +93,12 @@ export default function HistoryScreen() {
                             <View style={styles.cardBody}>
                                 {game.players.map((p: any, index: number) => (
                                     <View key={index} style={styles.playerResult}>
-                                        <Text style={styles.playerName}>{p.name}:</Text>
-                                        <Text style={styles.playerScore}>{p.score}</Text>
+                                        <Text style={[styles.playerName, p.isWinner && styles.winnerName]}>
+                                            {p.name.toUpperCase()} {p.isWinner && '👑'}
+                                        </Text>
+                                        <Text style={[styles.playerScore, p.isWinner && styles.winnerScore]}>
+                                            {p.score}
+                                        </Text>
                                     </View>
                                 ))}
                             </View>
@@ -58,7 +108,7 @@ export default function HistoryScreen() {
 
                 {history.length > 0 && (
                     <Pressable style={styles.clearButton} onPress={clearHistory}>
-                        <Text style={styles.clearButtonText}>Wyczyść całą historię</Text>
+                        <Text style={styles.clearButtonText}>WYCZYŚĆ LOKALNĄ HISTORIĘ</Text>
                     </Pressable>
                 )}
 
@@ -71,22 +121,120 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#1e1e1e' },
-    scrollContent: { paddingBottom: 40, alignItems: 'center' },
-    titleContainer: { backgroundColor: '#e0e0e0', paddingVertical: 10, paddingHorizontal: 40, borderRadius: 5, marginVertical: 20 },
-    pageTitle: { fontSize: 20, fontWeight: 'bold', color: '#000' },
-    noHistory: { color: '#888', marginTop: 50, fontSize: 16, textAlign: 'center', paddingHorizontal: 20 },
-
-    gameCard: { backgroundColor: '#e0e0e0', width: '90%', borderRadius: 8, marginBottom: 20, overflow: 'hidden' },
-    cardHeader: { borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical: 8, alignItems: 'center', backgroundColor: '#d0d0d0' },
-    cardHeaderText: { fontWeight: 'bold', fontSize: 12, color: '#000' },
-    cardBody: { padding: 15 },
-    playerResult: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5, borderBottomWidth: 1, borderBottomColor: '#ccc', paddingBottom: 3 },
-    playerName: { fontWeight: 'bold', fontSize: 14, color: '#333' },
-    playerScore: { color: '#4da6ff', fontWeight: 'bold', fontSize: 16 },
-
-    clearButton: { marginTop: 20, backgroundColor: '#ff4d4d', padding: 15, borderRadius: 8, width: '80%', alignItems: 'center' },
-    clearButtonText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
-    backButton: { marginTop: 20, padding: 10 },
-    backButtonText: { color: '#e0e0e0', fontSize: 16, textDecorationLine: 'underline' }
+    container: {
+        flex: 1,
+        backgroundColor: '#102a22'
+    },
+    scrollContent: {
+        paddingBottom: 40,
+        alignItems: 'center',
+        width: '100%'
+    },
+    titleContainer: {
+        backgroundColor: '#16352b',
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        borderRadius: 20,
+        marginVertical: 20,
+        borderWidth: 1,
+        borderColor: '#c5a059'
+    },
+    pageTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#f4ebd0',
+        letterSpacing: 1
+    },
+    noHistory: {
+        color: '#c5a059',
+        marginTop: 50,
+        fontSize: 15,
+        textAlign: 'center',
+        paddingHorizontal: 20,
+        opacity: 0.7
+    },
+    gameCard: {
+        backgroundColor: '#0d221b',
+        width: '90%',
+        borderRadius: 16,
+        marginBottom: 20,
+        overflow: 'hidden',
+        borderWidth: 1.5,
+        borderColor: 'rgba(197, 160, 89, 0.4)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+        elevation: 4
+    },
+    cardHeader: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(197, 160, 89, 0.2)',
+        paddingVertical: 10,
+        alignItems: 'center',
+        backgroundColor: '#16352b'
+    },
+    cardHeaderText: {
+        fontWeight: 'bold',
+        fontSize: 11,
+        color: '#c5a059',
+        letterSpacing: 1
+    },
+    cardBody: {
+        padding: 16
+    },
+    playerResult: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(197, 160, 89, 0.1)',
+        paddingBottom: 6,
+        alignItems: 'center'
+    },
+    playerName: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        color: '#f4ebd0',
+        letterSpacing: 0.5
+    },
+    winnerName: {
+        color: '#c5a059',
+    },
+    playerScore: {
+        color: '#f4ebd0',
+        fontWeight: 'bold',
+        fontSize: 16,
+        opacity: 0.85
+    },
+    winnerScore: {
+        color: '#c5a059',
+        fontSize: 18,
+        opacity: 1
+    },
+    clearButton: {
+        marginTop: 20,
+        backgroundColor: 'rgba(255, 77, 77, 0.06)',
+        padding: 15,
+        borderRadius: 25,
+        width: '80%',
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: '#ff4d4d'
+    },
+    clearButtonText: {
+        color: '#ff4d4d',
+        fontWeight: 'bold',
+        fontSize: 13,
+        letterSpacing: 1
+    },
+    backButton: {
+        marginTop: 25,
+        padding: 10
+    },
+    backButtonText: {
+        color: '#c5a059',
+        fontSize: 15,
+        textDecorationLine: 'underline'
+    }
 });

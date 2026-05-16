@@ -45,26 +45,26 @@ export default function SettingsScreen() {
 
             <View style={styles.content}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.pageTitle}>USTAWIENIA</Text>
+                    <Text style={styles.pageTitle}>USTAWIENIA APLIKACJI</Text>
                 </View>
 
                 <View style={styles.optionsContainer}>
                     <View style={styles.optionRow}>
-                        <View>
+                        <View style={styles.textWrapper}>
                             <Text style={styles.optionLabel}>Próg Bębna</Text>
                             <Text style={styles.optionDesc}>Kiedy zaczyna się blokada punktów</Text>
                         </View>
                         <Pressable style={styles.toggleBtn} onPress={toggleThreshold}>
-                            <Text style={styles.toggleBtnText}>{barrelThreshold} pkt</Text>
+                            <Text style={styles.toggleBtnText}>{barrelThreshold} PKT</Text>
                         </Pressable>
                     </View>
 
                     <View style={styles.divider} />
 
                     <View style={styles.dangerZone}>
-                        <Text style={styles.dangerTitle}>Strefa Niebezpieczna</Text>
+                        <Text style={styles.dangerTitle}>STREFA NIEBEZPIECZNA</Text>
                         <Pressable style={styles.clearButton} onPress={clearAllData}>
-                            <Text style={styles.clearButtonText}>WYCZYŚĆ WSZYSTKIE DANE</Text>
+                            <Text style={styles.clearButtonText}>WYCZYŚĆ WSZYSTKIE DATA</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -74,19 +74,108 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#1e1e1e' },
-    content: { flex: 1, alignItems: 'center', paddingTop: 20 },
-    titleContainer: { backgroundColor: '#e0e0e0', paddingVertical: 10, paddingHorizontal: 40, borderRadius: 5, marginBottom: 30 },
-    pageTitle: { fontSize: 20, color: '#000', fontWeight: 'bold' },
-    optionsContainer: { backgroundColor: '#2a2a2a', width: '90%', padding: 20, borderRadius: 10, borderWidth: 1, borderColor: '#444' },
-    optionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-    optionLabel: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-    optionDesc: { color: '#888', fontSize: 12 },
-    toggleBtn: { backgroundColor: '#4da6ff', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8 },
-    toggleBtnText: { color: '#fff', fontWeight: 'bold' },
-    divider: { height: 1, backgroundColor: '#444', marginVertical: 20 },
-    dangerZone: { marginTop: 10 },
-    dangerTitle: { color: '#ff4d4d', fontWeight: 'bold', marginBottom: 15 },
-    clearButton: { backgroundColor: '#ff4d4d', padding: 15, borderRadius: 8, alignItems: 'center' },
-    clearButtonText: { color: '#fff', fontWeight: 'bold' }
+    container: {
+        flex: 1,
+        backgroundColor: '#102a22'
+    },
+    content: {
+        flex: 1,
+        alignItems: 'center',
+        paddingTop: 20
+    },
+    titleContainer: {
+        backgroundColor: '#16352b',
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        borderRadius: 20,
+        marginBottom: 30,
+        borderWidth: 1,
+        borderColor: '#c5a059'
+    },
+    pageTitle: {
+        fontSize: 16,
+        color: '#f4ebd0',
+        fontWeight: 'bold',
+        letterSpacing: 1
+    },
+    optionsContainer: {
+        backgroundColor: '#0d221b',
+        width: '90%',
+        padding: 22,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: 'rgba(197, 160, 89, 0.4)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 4
+    },
+    optionRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 5
+    },
+    textWrapper: {
+        flex: 1,
+        paddingRight: 10
+    },
+    optionLabel: {
+        color: '#f4ebd0',
+        fontSize: 17,
+        fontWeight: 'bold',
+        letterSpacing: 0.5
+    },
+    optionDesc: {
+        color: '#c5a059',
+        fontSize: 12,
+        opacity: 0.8,
+        marginTop: 3
+    },
+    toggleBtn: {
+        backgroundColor: '#f4ebd0',
+        paddingVertical: 12,
+        paddingHorizontal: 22,
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#c5a059',
+        minWidth: 100,
+        alignItems: 'center'
+    },
+    toggleBtnText: {
+        color: '#102a22',
+        fontWeight: 'bold',
+        fontSize: 14,
+        letterSpacing: 0.5
+    },
+    divider: {
+        height: 1,
+        backgroundColor: 'rgba(197, 160, 89, 0.2)',
+        marginVertical: 22
+    },
+    dangerZone: {
+        marginTop: 5
+    },
+    dangerTitle: {
+        color: '#ff4d4d',
+        fontWeight: 'bold',
+        marginBottom: 15,
+        fontSize: 13,
+        letterSpacing: 1
+    },
+    clearButton: {
+        backgroundColor: 'rgba(255, 77, 77, 0.06)',
+        padding: 15,
+        borderRadius: 25,
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: '#ff4d4d'
+    },
+    clearButtonText: {
+        color: '#ff4d4d',
+        fontWeight: 'bold',
+        letterSpacing: 1,
+        fontSize: 13
+    }
 });

@@ -87,20 +87,94 @@ export default function GuideScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#1e1e1e' },
-    scrollContent: { alignItems: 'center', paddingTop: 20, paddingBottom: 40 },
-
-    titleContainer: { backgroundColor: '#e0e0e0', paddingVertical: 15, paddingHorizontal: 30, borderRadius: 5, marginBottom: 20, width: '90%', alignItems: 'center' },
-    pageTitle: { fontSize: 20, fontWeight: 'bold', color: '#000' },
-
-    sectionCard: { backgroundColor: '#2a2a2a', width: '90%', padding: 20, borderRadius: 10, marginBottom: 15, borderWidth: 1, borderColor: '#444' },
-    sectionTitle: { color: '#4da6ff', fontSize: 18, fontWeight: 'bold', marginBottom: 10, borderBottomWidth: 1, borderBottomColor: '#444', paddingBottom: 5 },
-    sectionText: { color: '#e0e0e0', fontSize: 14, lineHeight: 22, marginBottom: 10 },
-
-    row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5, borderBottomWidth: 1, borderBottomColor: '#333' },
-    listItem: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-    listValue: { color: '#e0e0e0', fontSize: 16 },
-
-    noteText: { color: '#888', fontSize: 12, marginTop: 10, fontStyle: 'italic', textAlign: 'center' },
-    bulletPoint: { color: '#e0e0e0', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 5 }
+    container: {
+        flex: 1,
+        backgroundColor: '#102a22'
+    },
+    scrollContent: {
+        alignItems: 'center',
+        paddingTop: 20,
+        paddingBottom: 40
+    },
+    titleContainer: {
+        backgroundColor: '#16352b',
+        paddingVertical: 12,
+        paddingHorizontal: 35,
+        borderRadius: 20,
+        marginBottom: 25,
+        width: '90%',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#c5a059'
+    },
+    pageTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#f4ebd0',
+        letterSpacing: 1
+    },
+    sectionCard: {
+        backgroundColor: '#0d221b',
+        width: '90%',
+        padding: 20,
+        borderRadius: 16,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(197, 160, 89, 0.4)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 4
+    },
+    sectionTitle: {
+        color: '#c5a059',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(197, 160, 89, 0.2)',
+        paddingBottom: 6,
+        letterSpacing: 0.5
+    },
+    sectionText: {
+        color: '#f4ebd0',
+        fontSize: 14,
+        lineHeight: 22,
+        marginBottom: 10,
+        opacity: 0.9
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(197, 160, 89, 0.1)'
+    },
+    listItem: {
+        color: '#f4ebd0',
+        fontSize: 15,
+        fontWeight: 'bold'
+    },
+    listValue: {
+        color: '#c5a059',
+        fontSize: 15,
+        fontWeight: '600'
+    },
+    noteText: {
+        color: '#c5a059',
+        fontSize: 12,
+        marginTop: 14,
+        fontStyle: 'italic',
+        textAlign: 'center',
+        opacity: 0.7
+    },
+    bulletPoint: {
+        color: '#f4ebd0',
+        fontSize: 14,
+        lineHeight: 22,
+        marginLeft: 6,
+        marginBottom: 6,
+        opacity: 0.9
+    }
 });
