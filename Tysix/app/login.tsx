@@ -1,14 +1,36 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import Header from '../components/Header';
+import { supabase } from '../lib/supabase';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleLogin = () => {
-        console.log('Próba logowania:', email, password);
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert("Błąd", "Wpisz email i hasło!");
+            return;
+        }
+
+        setLoading(true);
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            Alert.alert("Błąd logowania", "Nieprawidłowy email lub hasło.");
+            console.error(error.message);
+        } else if (data.user) {
+            Alert.alert("Sukces", "Zalogowano pomyślnie!");
+            router.replace('/');
+        }
+
+        setLoading(false);
     };
 
     const handleRegister = () => {
@@ -25,12 +47,12 @@ export default function LoginScreen() {
                 </View>
 
                 <View style={styles.formContainer}>
-                    <Text style={styles.label}>LOGIN / EMAIL:</Text>
+                    <Text style={styles.label}>EMAIL:</Text>
                     <TextInput
                         style={styles.input}
                         value={email}
                         onChangeText={setEmail}
-                        placeholder="tysix023 / tysix023@gmail.com"
+                        placeholder="tysix023@gmail.com"
                         placeholderTextColor="#888"
                         keyboardType="email-address"
                         autoCapitalize="none"
@@ -47,9 +69,13 @@ export default function LoginScreen() {
                     />
 
                     <View style={styles.buttonContainer}>
-                        <Pressable style={styles.actionButton} onPress={handleLogin}>
-                            <Text style={styles.buttonText}>ZALOGUJ SIĘ</Text>
-                        </Pressable>
+                        {loading ? (
+                            <ActivityIndicator size="large" color="#4da6ff" style={{ marginBottom: 15 }} />
+                        ) : (
+                            <Pressable style={styles.actionButton} onPress={handleLogin}>
+                                <Text style={styles.buttonText}>ZALOGUJ SIĘ</Text>
+                            </Pressable>
+                        )}
 
                         <Pressable style={styles.actionButton} onPress={handleRegister}>
                             <Text style={styles.buttonText}>ZAREJESTRUJ SIĘ</Text>

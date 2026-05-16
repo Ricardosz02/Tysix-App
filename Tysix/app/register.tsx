@@ -1,18 +1,55 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Header from '../components/Header';
+import { supabase } from '../lib/supabase';
 
 export default function RegisterScreen() {
     const [nick, setNick] = useState('');
     const [login, setLogin] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleRegister = () => {
-        console.log('Nowy gracz:', { nick, login, email, password });
-        alert('Konto utworzone! Możesz się zalogować.');
-        router.back();
+    const handleRegister = async () => {
+        if (!nick || !login || !email || !password) {
+            Alert.alert("Błąd", "Wypełnij wszystkie pola!");
+            return;
+        }
+
+        setLoading(true);
+
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: email.trim(),
+            password: password,
+        });
+
+        if (authError) {
+            Alert.alert("Błąd rejestracji", authError.message);
+            setLoading(false);
+            return;
+        }
+
+        if (authData.user) {
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .insert([
+                    {
+                        id: authData.user.id,
+                        username: login,
+                    }
+                ]);
+
+            if (profileError) {
+                console.error("Błąd zapisu profilu:", profileError);
+                Alert.alert("Uwaga", "Konto zostało utworzone, ale wystąpił problem z zapisem profilu.");
+            } else {
+                Alert.alert('Sukces!', 'Konto utworzone pomyślnie. Możesz się zalogować.');
+                router.back();
+            }
+        }
+
+        setLoading(false);
     };
 
     return (
@@ -53,6 +90,7 @@ export default function RegisterScreen() {
                         placeholderTextColor="#888"
                         keyboardType="email-address"
                         autoCapitalize="none"
+                        autoCorrect={false}
                     />
 
                     <Text style={styles.label}>HASŁO</Text>
@@ -66,9 +104,13 @@ export default function RegisterScreen() {
                     />
 
                     <View style={styles.buttonContainer}>
-                        <Pressable style={styles.actionButton} onPress={handleRegister}>
-                            <Text style={styles.buttonText}>ZAREJESTRUJ SIĘ</Text>
-                        </Pressable>
+                        {loading ? (
+                            <ActivityIndicator size="large" color="#4da6ff" style={{ marginBottom: 20 }} />
+                        ) : (
+                            <Pressable style={styles.actionButton} onPress={handleRegister}>
+                                <Text style={styles.buttonText}>ZAREJESTRUJ SIĘ</Text>
+                            </Pressable>
+                        )}
 
                         <Pressable onPress={() => router.back()} style={styles.backLink}>
                             <Text style={styles.backLinkText}>Masz już konto? Wróć do logowania</Text>
