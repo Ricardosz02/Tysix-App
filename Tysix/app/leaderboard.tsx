@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -90,7 +91,7 @@ export default function LeaderboardScreen() {
                 </View>
 
                 {loading ? (
-                    <ActivityIndicator size="large" color="#c5a059" style={{ marginTop: 50 }} />
+                    <ActivityIndicator size="large" color="#4da6ff" style={{ marginTop: 50 }} />
                 ) : leaders.length === 0 ? (
                     <Text style={styles.noData}>Brak zarejestrowanych zwycięstw w chmurze.</Text>
                 ) : (
@@ -119,7 +120,6 @@ export default function LeaderboardScreen() {
 
                                     <Text style={styles.nameText}>{item.name.toUpperCase()}</Text>
                                 </View>
-
                                 <Text style={styles.winsText}>
                                     {item.wins} {item.wins === 1 ? 'wygrana' : item.wins < 5 ? 'wygrane' : 'wygranych'}
                                 </Text>
@@ -128,7 +128,13 @@ export default function LeaderboardScreen() {
                     />
                 )}
 
-                <Pressable style={styles.backButton} onPress={() => router.replace('/')}>
+                <Pressable
+                    style={styles.backButton}
+                    onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                        router.replace('/');
+                    }}
+                >
                     <Text style={styles.backButtonText}>Powrót do menu głównego</Text>
                 </Pressable>
             </View>
@@ -137,124 +143,22 @@ export default function LeaderboardScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#102a22'
-    },
-    content: {
-        flex: 1,
-        alignItems: 'center',
-        paddingTop: 20,
-        width: '100%'
-    },
-    titleContainer: {
-        backgroundColor: '#16352b',
-        paddingVertical: 10,
-        paddingHorizontal: 40,
-        borderRadius: 20,
-        marginBottom: 25,
-        borderWidth: 1,
-        borderColor: '#c5a059'
-    },
-    pageTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#f4ebd0',
-        letterSpacing: 1
-    },
-    noData: {
-        color: '#c5a059',
-        marginTop: 50,
-        fontSize: 16,
-        opacity: 0.7
-    },
-    list: {
-        width: '100%'
-    },
-    leaderCard: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#0d221b',
-        width: '90%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 16,
-        marginBottom: 12,
-        borderWidth: 1.5,
-        borderColor: 'rgba(197, 160, 89, 0.4)',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3,
-        elevation: 4
-    },
-    leftSection: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    rankText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginRight: 10,
-        width: 30,
-        textAlign: 'center',
-        color: '#c5a059'
-    },
-    avatarMiniContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: '#16352b',
-        marginRight: 15,
-        overflow: 'hidden',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1.5,
-        borderColor: '#c5a059'
-    },
-    avatarMini: {
-        width: '100%',
-        height: '100%'
-    },
-    avatarFallback: {
-        width: '100%',
-        height: '100%',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
-    avatarFallbackHead: {
-        width: 13,
-        height: 13,
-        borderRadius: 6.5,
-        backgroundColor: '#c5a059',
-        marginBottom: 2
-    },
-    avatarFallbackBody: {
-        width: 24,
-        height: 11,
-        borderTopLeftRadius: 11,
-        borderTopRightRadius: 11,
-        backgroundColor: '#c5a059'
-    },
-    nameText: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: '#f4ebd0',
-        letterSpacing: 0.5
-    },
-    winsText: {
-        color: '#c5a059',
-        fontWeight: 'bold',
-        fontSize: 14
-    },
-    backButton: {
-        marginVertical: 20,
-        padding: 10
-    },
-    backButtonText: {
-        color: '#c5a059',
-        fontSize: 15,
-        textDecorationLine: 'underline'
-    }
+    container: { flex: 1, backgroundColor: '#1e1e1e' },
+    content: { flex: 1, alignItems: 'center', paddingTop: 20, width: '100%' },
+    titleContainer: { backgroundColor: '#e0e0e0', paddingVertical: 10, paddingHorizontal: 40, borderRadius: 5, marginBottom: 20 },
+    pageTitle: { fontSize: 20, fontWeight: 'bold', color: '#000' },
+    noData: { color: '#888', marginTop: 50, fontSize: 16 },
+    list: { width: '100%' },
+    leaderCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#e0e0e0', width: '90%', paddingVertical: 12, paddingHorizontal: 20, borderRadius: 8, marginBottom: 12, borderWidth: 1, borderColor: '#ccc' },
+    leftSection: { flexDirection: 'row', alignItems: 'center' },
+    rankText: { fontSize: 18, fontWeight: 'bold', marginRight: 10, width: 30, textAlign: 'center', color: '#000' },
+    avatarMiniContainer: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#b0b0b0', marginRight: 15, overflow: 'hidden', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#999' },
+    avatarMini: { width: '100%', height: '100%' },
+    avatarFallback: { width: '100%', height: '100%', justifyContent: 'flex-end', alignItems: 'center' },
+    avatarFallbackHead: { width: 14, height: 14, borderRadius: 7, backgroundColor: '#444', marginBottom: 2 },
+    avatarFallbackBody: { width: 26, height: 12, borderTopLeftRadius: 12, borderTopRightRadius: 12, backgroundColor: '#444' },
+    nameText: { fontSize: 15, fontWeight: 'bold', color: '#151515' },
+    winsText: { color: '#4da6ff', fontWeight: 'bold', fontSize: 14 },
+    backButton: { marginVertical: 20, padding: 10 },
+    backButtonText: { color: '#e0e0e0', fontSize: 15, textDecorationLine: 'underline' }
 });

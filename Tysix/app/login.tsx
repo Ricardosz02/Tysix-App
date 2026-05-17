@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -9,16 +10,35 @@ export default function LoginScreen() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const validateEmail = (text: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(text.trim());
+    };
+
     const handleLogin = async () => {
-        if (!email || !password) {
-            Alert.alert("Błąd", "Wpisz email i hasło!");
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+        const trimmedEmail = email.trim();
+
+        if (!trimmedEmail || !password) {
+            Alert.alert("Brak danych", "Wypełnij wszystkie pola formularza.");
+            return;
+        }
+
+        if (!validateEmail(trimmedEmail)) {
+            Alert.alert("Niepoprawny email", "Wprowadzony adres email ma błędny format.");
+            return;
+        }
+
+        if (password.length < 6) {
+            Alert.alert("Błędne hasło", "Hasło musi składać się z co najmniej 6 znaków.");
             return;
         }
 
         setLoading(true);
 
         const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
+            email: trimmedEmail,
             password: password,
         });
 
@@ -34,6 +54,7 @@ export default function LoginScreen() {
     };
 
     const handleRegister = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         router.push('/register');
     };
 
@@ -47,7 +68,6 @@ export default function LoginScreen() {
                 </View>
 
                 <View style={styles.formContainer}>
-
                     <Text style={styles.label}>ADRES EMAIL:</Text>
                     <TextInput
                         style={styles.input}
@@ -82,7 +102,6 @@ export default function LoginScreen() {
                             <Text style={styles.secondaryButtonText}>STWÓRZ NOWE KONTO</Text>
                         </Pressable>
                     </View>
-
                 </View>
             </View>
         </View>
@@ -90,104 +109,16 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#102a22',
-    },
-    content: {
-        flex: 1,
-        alignItems: 'center',
-        paddingTop: 30,
-    },
-    titleContainer: {
-        backgroundColor: '#16352b',
-        paddingVertical: 12,
-        paddingHorizontal: 45,
-        borderRadius: 20,
-        marginBottom: 35,
-        borderWidth: 1,
-        borderColor: '#c5a059'
-    },
-    pageTitle: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#f4ebd0',
-        letterSpacing: 1.5,
-    },
-    formContainer: {
-        backgroundColor: '#0d221b',
-        width: '90%',
-        padding: 24,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: 'rgba(197, 160, 89, 0.4)',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    label: {
-        color: '#c5a059',
-        fontSize: 11,
-        fontWeight: 'bold',
-        marginBottom: 8,
-        marginLeft: 4,
-        letterSpacing: 1,
-    },
-    input: {
-        backgroundColor: '#16352b',
-        color: '#f4ebd0',
-        paddingVertical: 14,
-        paddingHorizontal: 16,
-        borderRadius: 12,
-        marginBottom: 24,
-        fontSize: 15,
-        borderWidth: 1,
-        borderColor: 'rgba(197, 160, 89, 0.2)',
-        fontWeight: '500'
-    },
-    buttonContainer: {
-        alignItems: 'center',
-        marginTop: 10,
-        width: '100%'
-    },
-    primaryButton: {
-        backgroundColor: '#f4ebd0',
-        paddingVertical: 15,
-        width: '100%',
-        borderRadius: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 16,
-        borderWidth: 1.5,
-        borderColor: '#c5a059',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3,
-        elevation: 4,
-    },
-    primaryButtonText: {
-        color: '#102a22',
-        fontSize: 15,
-        fontWeight: 'bold',
-        letterSpacing: 1,
-    },
-    secondaryButton: {
-        backgroundColor: 'transparent',
-        paddingVertical: 14,
-        width: '100%',
-        borderRadius: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1.5,
-        borderColor: '#c5a059',
-    },
-    secondaryButtonText: {
-        color: '#c5a059',
-        fontSize: 14,
-        fontWeight: 'bold',
-        letterSpacing: 1,
-    }
+    container: { flex: 1, backgroundColor: '#102a22' },
+    content: { flex: 1, alignItems: 'center', paddingTop: 30 },
+    titleContainer: { backgroundColor: '#16352b', paddingVertical: 12, paddingHorizontal: 45, borderRadius: 20, marginBottom: 35, borderWidth: 1, borderColor: '#c5a059' },
+    pageTitle: { fontSize: 15, fontWeight: 'bold', color: '#f4ebd0', letterSpacing: 1.5 },
+    formContainer: { backgroundColor: '#0d221b', width: '90%', padding: 24, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(197, 160, 89, 0.4)', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 4, elevation: 5 },
+    label: { color: '#c5a059', fontSize: 11, fontWeight: 'bold', marginBottom: 8, marginLeft: 4, letterSpacing: 1 },
+    input: { backgroundColor: '#16352b', color: '#f4ebd0', paddingVertical: 14, paddingHorizontal: 16, borderRadius: 12, marginBottom: 24, fontSize: 15, borderWidth: 1, borderColor: 'rgba(197, 160, 89, 0.2)', fontWeight: '500' },
+    buttonContainer: { alignItems: 'center', marginTop: 10, width: '100%' },
+    primaryButton: { backgroundColor: '#f4ebd0', paddingVertical: 15, width: '100%', borderRadius: 25, alignItems: 'center', justifyContent: 'center', marginBottom: 16, borderWidth: 1.5, borderColor: '#c5a059', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3, elevation: 4 },
+    primaryButtonText: { color: '#102a22', fontSize: 15, fontWeight: 'bold', letterSpacing: 1 },
+    secondaryButton: { backgroundColor: 'transparent', paddingVertical: 14, width: '100%', borderRadius: 25, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: '#c5a059' },
+    secondaryButtonText: { color: '#c5a059', fontSize: 14, fontWeight: 'bold', letterSpacing: 1 }
 });

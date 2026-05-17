@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { Session } from '@supabase/supabase-js';
+import * as Haptics from 'expo-haptics';
 import { router, useSegments } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ function CustomDrawerContent(props: any) {
                 <Image
                     source={require('../assets/images/logo.jpg')}
                     style={styles.drawerLogo}
-                    resizeMode="contain"
+                    resizeMode="cover"
                 />
                 <View style={styles.goldDivider} />
             </View>
@@ -83,6 +84,7 @@ export default function RootLayout() {
             >
                 <Drawer.Screen
                     name="index"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
                         drawerLabel: 'Ekran Startowy',
                         drawerIcon: ({ color }) => <Ionicons name="home" size={20} color={color} />
@@ -90,23 +92,26 @@ export default function RootLayout() {
                 />
 
                 <Drawer.Screen
-                    name="dashboard"
+                    name="players"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
-                        drawerLabel: 'Tabela Wyników',
-                        drawerIcon: ({ color }) => <Ionicons name="grid" size={20} color={color} />
+                        drawerLabel: 'Moja Ekipa',
+                        drawerIcon: ({ color }) => <Ionicons name="people" size={20} color={color} />
                     }}
                 />
 
                 <Drawer.Screen
                     name="leaderboard"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
-                        drawerLabel: 'Ranking Globalny 🏆',
+                        drawerLabel: 'Ranking Globalny',
                         drawerIcon: ({ color }) => <Ionicons name="trophy" size={20} color={color} />
                     }}
                 />
 
                 <Drawer.Screen
                     name="history"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
                         drawerLabel: 'Historia Gier',
                         drawerIcon: ({ color }) => <Ionicons name="time" size={20} color={color} />
@@ -115,6 +120,7 @@ export default function RootLayout() {
 
                 <Drawer.Screen
                     name="profile"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
                         drawerLabel: 'Mój Profil',
                         drawerIcon: ({ color }) => <Ionicons name="person" size={20} color={color} />,
@@ -124,6 +130,7 @@ export default function RootLayout() {
 
                 <Drawer.Screen
                     name="settings"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
                         drawerLabel: 'Ustawienia',
                         drawerIcon: ({ color }) => <Ionicons name="settings" size={20} color={color} />
@@ -132,6 +139,7 @@ export default function RootLayout() {
 
                 <Drawer.Screen
                     name="guide"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
                         drawerLabel: 'Jak grać?',
                         drawerIcon: ({ color }) => <Ionicons name="book" size={20} color={color} />
@@ -140,6 +148,7 @@ export default function RootLayout() {
 
                 <Drawer.Screen
                     name="login"
+                    listeners={{ drawerItemPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
                     options={{
                         drawerLabel: 'Zaloguj się',
                         drawerIcon: ({ color }) => <Ionicons name="log-in" size={20} color={color} />,
@@ -147,6 +156,7 @@ export default function RootLayout() {
                     }}
                 />
 
+                <Drawer.Screen name="dashboard" options={{ drawerItemStyle: { display: 'none' } }} />
                 <Drawer.Screen name="setup" options={{ drawerItemStyle: { display: 'none' } }} />
                 <Drawer.Screen name="register" options={{ drawerItemStyle: { display: 'none' } }} />
             </Drawer>
@@ -155,35 +165,16 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-    drawerHeader: {
-        padding: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 10,
-    },
+    drawerHeader: { padding: 20, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
     drawerLogo: {
-        width: 180,
-        height: 100,
-        marginBottom: 10,
+        width: 160,
+        height: 90,
+        borderRadius: 16,
+        borderWidth: 1.5,
+        borderColor: '#c5a059',
+        marginBottom: 10
     },
-    goldDivider: {
-        height: 1,
-        backgroundColor: '#c5a059',
-        width: '100%',
-        marginTop: 10,
-        opacity: 0.5,
-    },
-    drawerFooter: {
-        padding: 20,
-        borderTopWidth: 1,
-        borderTopColor: 'rgba(197, 160, 89, 0.2)',
-        marginTop: 20,
-    },
-    footerVersion: {
-        color: '#c5a059',
-        fontSize: 10,
-        textAlign: 'center',
-        opacity: 0.5,
-        letterSpacing: 1,
-    }
+    goldDivider: { height: 1, backgroundColor: '#c5a059', width: '100%', marginTop: 10, opacity: 0.5 },
+    drawerFooter: { padding: 20, borderTopWidth: 1, borderTopColor: 'rgba(197, 160, 89, 0.2)', marginTop: 20 },
+    footerVersion: { color: '#c5a059', fontSize: 10, textAlign: 'center', opacity: 0.5, letterSpacing: 1 }
 });
